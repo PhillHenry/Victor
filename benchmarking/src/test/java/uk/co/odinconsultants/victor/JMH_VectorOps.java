@@ -29,8 +29,16 @@ public class JMH_VectorOps {
     float[] y = createRandomVector(n);
 
     @Benchmark
-    public float measureRight() {
+    public float usingJEP426() {
         return VectorOps.vectorFMA(x, y);
+    }
+    @Benchmark
+    public float usingPlainOldJava() {
+        int c = 0;
+        for (int i = 0; i < x.length; i++) { // Cleanup loop
+            c += x[i] * y[i];
+        }
+        return c;
     }
 
     public static void main(String[] args) throws RunnerException {
