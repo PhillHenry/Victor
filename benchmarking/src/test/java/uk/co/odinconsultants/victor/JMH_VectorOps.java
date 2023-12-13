@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class JMH_VectorOps {
 
+    private final AdvancedVectorExtensionsOps aveOps = new AdvancedVectorExtensionsOps();
+
     private final int n = 32;
 
     public static float[] createRandomVector(int n) {
@@ -33,7 +35,7 @@ public class JMH_VectorOps {
 
     @Benchmark
     public float usingJEP426() {
-        return VectorOps.vectorFMA(x, y);
+        return aveOps.vectorFMA(x, y);
     }
     @Benchmark
     public float usingPlainOldJava() {

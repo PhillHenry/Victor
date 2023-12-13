@@ -4,13 +4,14 @@ import jdk.incubator.vector.FloatVector;
 import jdk.incubator.vector.VectorOperators;
 import jdk.incubator.vector.VectorSpecies;
 
-public class VectorOps {
+public class AdvancedVectorExtensionsOps {
     private static final VectorSpecies<Float> SPECIES = FloatVector.SPECIES_PREFERRED;
 
     /**
      * See https://medium.com/@Styp/java-18-vector-api-do-we-get-free-speed-up-c4510eda50d2
+     * Fused-Multiply-Add
      */
-    public static float vectorFMA(float[] a, float[] b){
+    public float vectorFMA(float[] a, float[] b){
         var upperBound = SPECIES.loopBound(a.length);
         var sum = FloatVector.zero(SPECIES);
         var i = 0;

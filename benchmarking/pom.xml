@@ -99,7 +99,6 @@
                                 <argument>org.openjdk.jmh.Main</argument>
                                 <argument>-i3</argument>
                                 <argument>-f3</argument>
-                                <argument>-wf3</argument>
                             </arguments>
                         </configuration>
                     </execution>
