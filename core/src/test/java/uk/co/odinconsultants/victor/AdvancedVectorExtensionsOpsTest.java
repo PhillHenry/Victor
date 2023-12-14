@@ -3,7 +3,6 @@ package uk.co.odinconsultants.victor;
 import org.junit.Test;
 
 public class AdvancedVectorExtensionsOpsTest {
-
     final AdvancedVectorExtensionsOps toTest = new AdvancedVectorExtensionsOps();
 
     public static float[] vectorAllOf(float x, int size) {
