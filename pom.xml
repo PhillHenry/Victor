@@ -45,7 +45,6 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
-<!--
         <dependency>
             <groupId>tornado</groupId>
             <artifactId>tornado-api</artifactId>
@@ -62,7 +61,6 @@
             <version>${tornado.version}</version>
             <scope>provided</scope>
         </dependency>
--->
     </dependencies>
 
     <build>

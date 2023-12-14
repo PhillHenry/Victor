@@ -1,5 +1,5 @@
 package uk.co.odinconsultants.victor;
-/*
+
 import uk.ac.manchester.tornado.api.ImmutableTaskGraph;
 import uk.ac.manchester.tornado.api.TaskGraph;
 import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
@@ -30,4 +30,3 @@ public class GPUOps {
         executionPlan.execute();
     }
 }
-*/
