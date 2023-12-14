@@ -34,6 +34,8 @@
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
         <encoding>UTF-8</encoding>
+        <tornado.version>0.15.2</tornado.version>
+        <jmh.version>1.37</jmh.version>
     </properties>
 
     <dependencies>
@@ -43,6 +45,24 @@
             <version>4.13.2</version>
             <scope>test</scope>
         </dependency>
+<!--
+        <dependency>
+            <groupId>tornado</groupId>
+            <artifactId>tornado-api</artifactId>
+            <version>${tornado.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tornado</groupId>
+            <artifactId>tornado-matrices</artifactId>
+            <version>${tornado.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>tornado</groupId>
+            <artifactId>tornado-runtime</artifactId>
+            <version>${tornado.version}</version>
+            <scope>provided</scope>
+        </dependency>
+-->
     </dependencies>
 
     <build>
@@ -73,8 +93,8 @@
                 </plugins>
             </build>
         </profile>
-
     </profiles>
+
 
     <distributionManagement>
         <snapshotRepository>
