@@ -17,11 +17,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.2</version>
                 <configuration>
+                    <jvm>/home/henryp/Code/Java/Victor/bin/java</jvm>
                     <forkMode>always</forkMode>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                    <argLine>
-                        --add-modules jdk.incubator.vector
-                    </argLine>
                 </configuration>
             </plugin>
 
