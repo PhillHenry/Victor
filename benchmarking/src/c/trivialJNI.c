@@ -11,6 +11,6 @@ void func()
 }
 
 
-JNIEXPORT int JNICALL Java_trivialJNI_randInt(JNIEnv *env, jobject obj) {
+JNIEXPORT int JNICALL Java_uk_co_odinconsultants_victor_JMHJNI_randInt(JNIEnv *env, jobject obj) {
     return rand();
 }

@@ -95,14 +95,11 @@
                         </goals>
                         <configuration>
                             <classpathScope>test</classpathScope>
-                            <executable>java</executable>
+                            <executable>/home/henryp/Code/Java/Victor/bin/java</executable>
                             <arguments>
-                                <argument>--add-modules=jdk.incubator.vector</argument>
-                                <argument>-classpath</argument>
+                                <argument>--classpath</argument>
                                 <classpath />
                                 <argument>org.openjdk.jmh.Main</argument>
-                                <argument>-i3</argument>
-                                <argument>-f3</argument>
                             </arguments>
                         </configuration>
                     </execution>

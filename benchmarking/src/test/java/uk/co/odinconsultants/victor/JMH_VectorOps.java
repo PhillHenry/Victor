@@ -18,8 +18,9 @@ import java.util.concurrent.TimeUnit;
 public class JMH_VectorOps {
 
     private final AdvancedVectorExtensionsOps aveOps = new AdvancedVectorExtensionsOps();
+    private final GPUOps gpuOps = new GPUOps();
 
-    private final int n = 32;
+    private final int n = 8388608;
 
     public static float[] createRandomVector(int n) {
         var random = new Random();
@@ -33,6 +34,10 @@ public class JMH_VectorOps {
     float[] x = createRandomVector(n);
     float[] y = createRandomVector(n);
 
+    @Benchmark
+    public void usingGPU() {
+        gpuOps.dot(x, y);
+    }
     @Benchmark
     public float usingJEP426() {
         return aveOps.vectorFMA(x, y);

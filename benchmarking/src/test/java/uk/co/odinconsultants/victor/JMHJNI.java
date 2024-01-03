@@ -6,18 +6,19 @@ import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
-import java.util.Random;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class JMH_JNI {
+public class JMHJNI {
 
     private int DO_NOT_OPTIMIZE = 0;
 
     static {
-        System.load("libtrivia.so");
+        String library = String.format("%s/libtrivia.so", JMHJNI.class.getClassLoader().getResource(".").toString().substring(5));
+        System.out.println("Loading " + library);
+        System.load(library);
     }
 
     // Declare native method
@@ -25,7 +26,8 @@ public class JMH_JNI {
 
     @Benchmark
     public int jniCall() {
-        randInt() ^ DO_NOT_OPTIMIZE;
+        DO_NOT_OPTIMIZE = randInt() ^ DO_NOT_OPTIMIZE;
+        return DO_NOT_OPTIMIZE;
     }
 
     public static void main(String[] args) throws RunnerException {

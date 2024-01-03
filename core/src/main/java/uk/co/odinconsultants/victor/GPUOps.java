@@ -33,6 +33,6 @@ public class GPUOps {
     public static void main(String[] args) {
         var smokeTest = new GPUOps();
         smokeTest.dot(new float[] {1f, 2f}, new float[] {3f, 4f});
-	System.out.println("Finished smoke test");
+	    System.out.println("Finished smoke test");
     }
 }
