@@ -14,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 public class JMHJNI {
 
     private int DO_NOT_OPTIMIZE = 0;
+    private long DO_NOT_OPTIMIZE_Long = 0L;
 
     static {
         String library = String.format("%s/libtrivia.so", JMHJNI.class.getClassLoader().getResource(".").toString().substring(5));
@@ -23,6 +24,12 @@ public class JMHJNI {
 
     // Declare native method
     public native int randInt();
+
+    @Benchmark
+    public long doKernelCall() {
+        DO_NOT_OPTIMIZE_Long = System.currentTimeMillis() ^ DO_NOT_OPTIMIZE_Long;
+        return DO_NOT_OPTIMIZE_Long;
+    }
 
     @Benchmark
     public int jniCall() {
