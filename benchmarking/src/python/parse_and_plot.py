@@ -50,7 +50,7 @@ def plot_results(results: dict):
     plt.xlabel("Vector size (log10)")
     plt.ylabel("Time per action (log10) / ns")
     plt.title("Vector multiplication times")
-    plt.legend(TYPE, loc='lower right')
+    plt.legend(["usingJEP426", "usingPlainOldJava", "usingGPU"], loc='lower right')
     plt.show()
 
 
