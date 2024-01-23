@@ -20,6 +20,7 @@
                     <jvm>/home/henryp/Code/Java/Victor/bin/java</jvm>
                     <forkMode>always</forkMode>
                     <redirectTestOutputToFile>true</redirectTestOutputToFile>
+<!--                    <argLine>&#45;&#45;add-opens=java.base/java.nio=ALL-UNNAMED</argLine>-->
                 </configuration>
             </plugin>
 

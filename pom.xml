@@ -36,6 +36,7 @@
         <encoding>UTF-8</encoding>
         <tornado.version>0.15.2</tornado.version>
         <jmh.version>1.37</jmh.version>
+        <arrow.version>15.0.0</arrow.version>
     </properties>
 
     <dependencies>
@@ -60,6 +61,16 @@
             <artifactId>tornado-runtime</artifactId>
             <version>${tornado.version}</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-vector</artifactId>
+            <version>${arrow.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.arrow</groupId>
+            <artifactId>arrow-memory-netty</artifactId>
+            <version>${arrow.version}</version>
         </dependency>
     </dependencies>
 
@@ -86,6 +97,7 @@
                                 <arg>--add-exports=java.rmi/sun.rmi.registry=ALL-UNNAMED</arg>
                                 <arg>--add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED</arg>
                                 <arg>--add-modules=jdk.incubator.vector</arg>
+                                <arg>--add-opens=java.base/java.nio=ALL-UNNAMED</arg>
                             </compilerArgs>
                         </configuration>
                     </plugin>
