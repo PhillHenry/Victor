@@ -82,6 +82,9 @@
     <profiles>
         <profile>
             <id>java21-target</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
             <build>
                 <plugins>
                     <plugin>

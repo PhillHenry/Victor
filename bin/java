@@ -3,4 +3,4 @@ export PATH=$JAVA_HOME/bin:$PATH
 
 export TORNADO_SDK=/usr/local/bin/Java/Tornado
 export PATH=$TORNADO_SDK/bin:$PATH
-/usr/local/bin/Java/Tornado/bin/tornado  $@
+/usr/local/bin/Java/Tornado/bin/tornado --jvm "\-\-add-modules=jdk.incubator.vector" $@
