@@ -18,8 +18,14 @@ public class JMHJNI {
 
     static {
         String library = String.format("%s/libtrivia.so", JMHJNI.class.getClassLoader().getResource(".").toString().substring(5));
-        System.out.println("Loading " + library);
-        System.load(library);
+        try {
+            System.out.println("Loading " + library);
+            System.load(library);
+        } catch (Error x) {
+            throw new RuntimeException("Could not load " + library +
+                    ". Build it following the benchmarking/src/c/README.md and  don't get Maven to clean",
+                    x);
+        }
     }
 
     // Declare native method

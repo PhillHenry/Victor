@@ -31,10 +31,10 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
         <encoding>UTF-8</encoding>
-        <tornado.version>0.15.2</tornado.version>
+        <tornado.version>1.0.6-dev</tornado.version>
         <jmh.version>1.37</jmh.version>
         <arrow.version>15.0.0</arrow.version>
     </properties>
@@ -101,6 +101,7 @@
                                 <arg>--add-exports=java.security.jgss/sun.security.krb5=ALL-UNNAMED</arg>
                                 <arg>--add-modules=jdk.incubator.vector</arg>
                                 <arg>--add-opens=java.base/java.nio=ALL-UNNAMED</arg>
+                                <arg>--enable-preview</arg>
                             </compilerArgs>
                         </configuration>
                     </plugin>
