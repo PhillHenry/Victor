@@ -7,7 +7,7 @@ public class GPUOpsTest {
 
     @Test
     public void testDotProduct() {
-        float[] vec = AdvancedVectorExtensionsOpsTest.vectorAllOf(1, 32);
+        float[] vec = Fixtures.vectorAllOf(1, 32);
         toTest.dot(vec, vec);
     }
 
