@@ -95,7 +95,7 @@
                         </goals>
                         <configuration>
                             <classpathScope>test</classpathScope>
-                            <executable>/home/henryp/Code/Java/Victor/bin/java</executable>
+                            <executable>${pom.parent.basedir}/bin/java</executable>
                             <arguments>
                                 <argument>--classpath</argument>
                                 <classpath />
