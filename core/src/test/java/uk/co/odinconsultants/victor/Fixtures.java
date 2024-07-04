@@ -8,4 +8,14 @@ public class Fixtures {
         }
         return vec;
     }
+
+    public static float[][] matrixOf(int width, int height, float x) {
+        float[][] matrix = new float[width][height];
+        for (int i = 0 ; i < width ; i++ ) {
+            for (int j = 0 ; j < width ; j++ ) {
+                matrix[i][j] = x;
+            }
+        }
+        return matrix;
+    }
 }
