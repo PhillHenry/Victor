@@ -11,7 +11,8 @@ import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 
 public class GPUOps {
 
-    public static void dotFloatArray(FloatArray A, final FloatArray B, FloatArray result, final int size) {
+    public static void dotFloatArray(FloatArray A, final FloatArray B, FloatArray result) {
+        int size = A.getSize();
         float sum = 0;
         for (int i = 0; i < size; i++) {
             sum += A.get(i) * B.get(i);
@@ -23,19 +24,22 @@ public class GPUOps {
      * This is broken as it only computes the first value.
      * The reason seems to be that the @Parallel must work over the
      */
-    public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result, final int size) {
+    public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result) {
+        int size = A.getSize();
         for (@Parallel int i = 0; i < size; i++) {
             result.set(i, A.get(i) * B.get(i));
         }
     }
 
-    public static void dotFloatArrayReducing(FloatArray A, final FloatArray B, @Reduce FloatArray result, final int size) {
+    public static void dotFloatArrayReducing(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
+        int size = A.getSize();
         for (@Parallel int i = 0; i < size; i++) {
             result.set(i, A.get(i) * B.get(i));
         }
     }
 
-    public static void vecMultiply(final float[] A, final float[] B, float[] result, final int size) {
+    public static void vecMultiply(final float[] A, final float[] B, float[] result) {
+        int size = A.length;
         for (@Parallel int i = 0; i < size; i++) {
             result[i] = A[i] * B[i];
         }
@@ -54,7 +58,7 @@ public class GPUOps {
         FloatArray result = new FloatArray(1);
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
-                .task("t0", GPUOps::dotFloatArray, A, B, result, size)
+                .task("t0", GPUOps::dotFloatArray, A, B, result)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
@@ -68,7 +72,7 @@ public class GPUOps {
         FloatArray result = new FloatArray(size);
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
-                .task("t0", GPUOps::dotFloatArray, A, B, result, size)
+                .task("t0", GPUOps::dotFloatArray, A, B, result)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
@@ -82,7 +86,7 @@ public class GPUOps {
         float[] result = new float[A.length];
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B)
-                .task("t0", GPUOps::vecMultiply, A, B, result, A.length)
+                .task("t0", GPUOps::vecMultiply, A, B, result)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();

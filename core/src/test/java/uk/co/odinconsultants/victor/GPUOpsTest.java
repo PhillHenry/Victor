@@ -22,14 +22,14 @@ public class GPUOpsTest {
     @Test
     public void testJavaDotFloatArray() {
         FloatArray result = new FloatArray(size);
-        toTest.dotFloatArray(vecFloatArray, vecFloatArray, result, size);
+        toTest.dotFloatArray(vecFloatArray, vecFloatArray, result);
         Assert.assertEquals(x * size, reduce(result.toHeapArray()), 0f);
     }
 
     @Test
     public void testJavaVecMultiply() {
         float[] result = new float[size];
-        toTest.vecMultiply(vec, vec, result, size);
+        toTest.vecMultiply(vec, vec, result);
         Assert.assertEquals(x * size, reduce(result), 0f);
     }
 
@@ -40,14 +40,12 @@ public class GPUOpsTest {
 
     @Test
     public void testTornadoDotProductFloatArray() {
-        logger.info("Hello world");
         System.out.println("This is the console");
         Assert.assertEquals(x * size, toTest.dot(vecFloatArray, vecFloatArrayOther, size), 0f);
     }
 
     @Test
     public void testTornadoDotProductFloatArrayReduceOnGPU() {
-        logger.info("Hello world");
         System.out.println("This is the console");
         Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther, size), 0f);
     }
