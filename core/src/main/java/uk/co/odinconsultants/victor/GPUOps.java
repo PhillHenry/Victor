@@ -10,22 +10,19 @@ import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 
 public class GPUOps {
 
-    public static final int WARMING_UP_ITERATIONS = 15;
-
-    /**
-     * This is broken as it only computes the first value.
-     * The reason seems to be that the @Parallel must work over the
-     */
-    public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result, final int size) {
+    public static void dotFloatArray(FloatArray A, final FloatArray B, FloatArray result, final int size) {
         float sum = 0;
-//        for (@Parallel int i = 0; i < size; i++) {
         for (int i = 0; i < size; i++) {
             sum += A.get(i) * B.get(i);
         }
         result.set(0, sum);
     }
 
-    public static void dotFloatArray(FloatArray A, final FloatArray B, FloatArray result, final int size) {
+    /**
+     * This is broken as it only computes the first value.
+     * The reason seems to be that the @Parallel must work over the
+     */
+    public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result, final int size) {
         for (@Parallel int i = 0; i < size; i++) {
             result.set(i, A.get(i) * B.get(i));
         }
@@ -50,7 +47,7 @@ public class GPUOps {
         FloatArray result = new FloatArray(1);
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
-                .task("t0", GPUOps::dotFloatArrayBroken, A, B, result, size)
+                .task("t0", GPUOps::dotFloatArray, A, B, result, size)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
@@ -71,7 +68,7 @@ public class GPUOps {
         TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
         executionPlan.withProfiler(ProfilerMode.CONSOLE);
         executionPlan.execute();
-        return reduce(result.toHeapArray());
+        return result.get(0);
     }
 
     public float dot(final float[] A, final float[] B) {
