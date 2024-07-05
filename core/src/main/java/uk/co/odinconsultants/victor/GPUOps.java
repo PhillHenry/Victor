@@ -12,7 +12,11 @@ public class GPUOps {
 
     public static final int WARMING_UP_ITERATIONS = 15;
 
-    public static void dotFloatArray(FloatArray A, final FloatArray B, FloatArray result, final int size) {
+    /**
+     * This is broken as it only computes the first value.
+     * The reason seems to be that the @Parallel must work over the
+     */
+    public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result, final int size) {
         float sum = 0;
         for (@Parallel int i = 0; i < size; i++) {
             sum += A.get(i) * B.get(i);
@@ -20,16 +24,30 @@ public class GPUOps {
         result.set(0, sum);
     }
 
-    public static void vecMultiply(final float[] A, final float[] B, float[] result, final int size) {
-        float sum = 0.0f;
+    public static void dotFloatArray(FloatArray A, final FloatArray B, FloatArray result, final int size) {
         for (@Parallel int i = 0; i < size; i++) {
-            sum += A[i] * B[i];
+            result.set(i, A.get(i) * B.get(i));
         }
-        result[0] = sum;
     }
 
+    public static void vecMultiply(final float[] A, final float[] B, float[] result, final int size) {
+        for (@Parallel int i = 0; i < size; i++) {
+            result[i] = A[i] * B[i];
+        }
+    }
+
+
+    static float reduce(float[] xs) {
+        float sum = 0f;
+        for (int i = 0 ; i < xs.length ; i++) {
+            sum += xs[i];
+        }
+        return sum;
+    }
+
+
     public float dot(final FloatArray A, final FloatArray B, int size) {
-        FloatArray result = new FloatArray(1);
+        FloatArray result = new FloatArray(size);
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
                 .task("t0", GPUOps::dotFloatArray, A, B, result, size)
@@ -39,11 +57,11 @@ public class GPUOps {
         TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
         executionPlan.withProfiler(ProfilerMode.CONSOLE);
         executionPlan.execute();
-        return result.get(0);
+        return reduce(result.toHeapArray());
     }
 
     public float dot(final float[] A, final float[] B) {
-        float[] result = new float[1];
+        float[] result = new float[A.length];
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B)
                 .task("t0", GPUOps::vecMultiply, A, B, result, A.length)
@@ -52,7 +70,7 @@ public class GPUOps {
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
         TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
         executionPlan.execute();
-        return result[0];
+        return reduce(result);
     }
 
     public static void main(String[] args) {
