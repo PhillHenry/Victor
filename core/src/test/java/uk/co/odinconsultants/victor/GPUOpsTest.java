@@ -35,7 +35,7 @@ public class GPUOpsTest {
 
     @Test
     public void testTornadoDotProduct() {
-        Assert.assertEquals(x * size, toTest.dot(vec, vec), 0f);
+        Assert.assertEquals(x * size, toTest.dotReduceOnCPU(vec, vec), 0f);
     }
 
     @Test

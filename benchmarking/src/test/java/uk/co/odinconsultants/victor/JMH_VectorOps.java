@@ -36,7 +36,7 @@ public class JMH_VectorOps {
 
     @Benchmark
     public void usingGPU() {
-        gpuOps.dot(x, y);
+        gpuOps.dotReduceOnCPU(x, y);
     }
     @Benchmark
     public float usingJEP426() {

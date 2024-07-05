@@ -4,6 +4,7 @@ import uk.ac.manchester.tornado.api.ImmutableTaskGraph;
 import uk.ac.manchester.tornado.api.TaskGraph;
 import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
 import uk.ac.manchester.tornado.api.annotations.Parallel;
+import uk.ac.manchester.tornado.api.annotations.Reduce;
 import uk.ac.manchester.tornado.api.enums.DataTransferMode;
 import uk.ac.manchester.tornado.api.enums.ProfilerMode;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
@@ -23,6 +24,12 @@ public class GPUOps {
      * The reason seems to be that the @Parallel must work over the
      */
     public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result, final int size) {
+        for (@Parallel int i = 0; i < size; i++) {
+            result.set(i, A.get(i) * B.get(i));
+        }
+    }
+
+    public static void dotFloatArrayReducing(FloatArray A, final FloatArray B, @Reduce FloatArray result, final int size) {
         for (@Parallel int i = 0; i < size; i++) {
             result.set(i, A.get(i) * B.get(i));
         }
@@ -71,7 +78,7 @@ public class GPUOps {
         return result.get(0);
     }
 
-    public float dot(final float[] A, final float[] B) {
+    public float dotReduceOnCPU(final float[] A, final float[] B) {
         float[] result = new float[A.length];
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B)
@@ -86,7 +93,7 @@ public class GPUOps {
 
     public static void main(String[] args) {
         var smokeTest = new GPUOps();
-        smokeTest.dot(new float[] {1f, 2f}, new float[] {3f, 4f});
+        smokeTest.dotReduceOnCPU(new float[] {1f, 2f}, new float[] {3f, 4f});
 	    System.out.println("Finished smoke test");
     }
 }
