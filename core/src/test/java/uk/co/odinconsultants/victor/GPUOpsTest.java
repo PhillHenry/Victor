@@ -46,6 +46,13 @@ public class GPUOpsTest {
     }
 
     @Test
+    public void testTornadoDotProductFloatArrayReduceOnGPU() {
+        logger.info("Hello world");
+        System.out.println("This is the console");
+        Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther, size), 0f);
+    }
+
+    @Test
     public void matrixMult() {
 
     }

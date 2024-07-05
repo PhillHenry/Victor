@@ -18,7 +18,8 @@ public class GPUOps {
      */
     public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result, final int size) {
         float sum = 0;
-        for (@Parallel int i = 0; i < size; i++) {
+//        for (@Parallel int i = 0; i < size; i++) {
+        for (int i = 0; i < size; i++) {
             sum += A.get(i) * B.get(i);
         }
         result.set(0, sum);
@@ -45,6 +46,19 @@ public class GPUOps {
         return sum;
     }
 
+    public float dotReduceOnGPU(final FloatArray A, final FloatArray B, int size) {
+        FloatArray result = new FloatArray(1);
+        TaskGraph t = new TaskGraph("s0")
+                .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
+                .task("t0", GPUOps::dotFloatArrayBroken, A, B, result, size)
+                .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
+
+        ImmutableTaskGraph immutableTaskGraph = t.snapshot();
+        TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
+        executionPlan.withProfiler(ProfilerMode.CONSOLE);
+        executionPlan.execute();
+        return result.get(0);
+    }
 
     public float dot(final FloatArray A, final FloatArray B, int size) {
         FloatArray result = new FloatArray(size);
