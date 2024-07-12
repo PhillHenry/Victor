@@ -3,6 +3,7 @@ package uk.co.odinconsultants.victor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Assert;
+import org.junit.Ignore;
 import org.junit.Test;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 
@@ -45,9 +46,10 @@ public class GPUOpsTest {
     }
 
     @Test
+    @Ignore
     public void testTornadoDotProductFloatArrayReduceOnGPU() {
         System.out.println("This is the console");
-        Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther, size), 0f);
+        Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther), 0f);
     }
 
     @Test

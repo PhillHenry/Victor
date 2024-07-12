@@ -26,6 +26,9 @@ public class GPUOps {
      */
     public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, FloatArray result) {
         int size = A.getSize();
+        for (int i = 0; i < size; i++) {
+            result.set(i, A.get(i) * B.get(i));
+        }
         for (@Parallel int i = 0; i < size; i++) {
             result.set(i, A.get(i) * B.get(i));
         }
@@ -34,7 +37,7 @@ public class GPUOps {
     public static void dotFloatArrayReducing(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
         int size = A.getSize();
         for (@Parallel int i = 0; i < size; i++) {
-            result.set(i, A.get(i) * B.get(i));
+            result.set(0, result.get(0) + result.get(i));
         }
     }
 
@@ -54,11 +57,11 @@ public class GPUOps {
         return sum;
     }
 
-    public float dotReduceOnGPU(final FloatArray A, final FloatArray B, int size) {
+    public float dotReduceOnGPU(final FloatArray A, final FloatArray B) {
         FloatArray result = new FloatArray(1);
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
-                .task("t0", GPUOps::dotFloatArray, A, B, result)
+                .task("t0", GPUOps::dotFloatArrayReducing, A, B, result)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
