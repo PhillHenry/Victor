@@ -34,10 +34,12 @@ public class GPUOps {
         }
     }
 
-    public static void dotFloatArrayReducing(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
+    public static void dotFloatArrayReducing(FloatArray A, final FloatArray B,  FloatArray result) {
+        result.set(0, 0f);
         int size = A.getSize();
-        for (@Parallel int i = 0; i < size; i++) {
-            result.set(0, result.get(0) + result.get(i));
+        for (int i = 0; i < size; i++) {
+            float value = A.get(i) * B.get(i);
+            result.set(0, result.get(0) + value);
         }
     }
 

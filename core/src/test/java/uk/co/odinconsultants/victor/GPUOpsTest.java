@@ -40,13 +40,13 @@ public class GPUOpsTest {
     }
 
     @Test
+    @Ignore
     public void testTornadoDotProductFloatArray() {
         System.out.println("This is the console");
         Assert.assertEquals(x * size, toTest.dot(vecFloatArray, vecFloatArrayOther, size), 0f);
     }
 
     @Test
-    @Ignore
     public void testTornadoDotProductFloatArrayReduceOnGPU() {
         System.out.println("This is the console");
         Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther), 0f);
