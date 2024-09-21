@@ -75,8 +75,7 @@ public class GPUOps {
 
     public static void reduceByAdding(FloatArray A, @Reduce FloatArray result) {
         result.set(0, 0.0f);
-        int size = 33; // TODO this is hard coded to make the tests pass! Fix! If dynamic, fails.
-        for (@Parallel int i = 0; i < size; i++) {
+        for (@Parallel int i = 0; i < A.getSize(); i++) {
             result.set(0, result.get(0) + A.get(i));
         }
     }
