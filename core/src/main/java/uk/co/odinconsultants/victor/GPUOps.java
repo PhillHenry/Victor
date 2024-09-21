@@ -39,8 +39,7 @@ public class GPUOps {
 
     public static void dotFloatArrayReducingWithAnnotations(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
         result.set(0, 0f);
-        int size = A.getSize();
-        for (@Parallel int i = 0; i < size; i++) {
+        for (@Parallel int i = 0; i < A.getSize(); i++) {
             float value = A.get(i) * B.get(i);
             result.set(0, result.get(0) + value);
         }
@@ -84,14 +83,12 @@ public class GPUOps {
         FloatArray result = new FloatArray(1);
         result.init(0.0f);
 
-        TaskGraph taskGraph = new TaskGraph("s0") //
+        TaskGraph t = new TaskGraph("s0") //
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A)//
                 .task("t0", GPUOps::reduceByAdding, A, result) //
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
-        ImmutableTaskGraph immutableTaskGraph = taskGraph.snapshot();
-        TornadoExecutionPlan executor = new TornadoExecutionPlan(immutableTaskGraph);
-        executor.execute();
+        execute(t);
         return result.get(0);
     }
 
