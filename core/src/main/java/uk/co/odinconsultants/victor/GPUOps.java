@@ -20,10 +20,6 @@ public class GPUOps {
         result.set(0, sum);
     }
 
-    /**
-     * This is broken as it only computes the first value.
-     * The reason seems to be that the @Parallel must work over the
-     */
     public static void multipleAndReduce(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
         int size = A.getSize();
         for (@Parallel int i = 0; i < size; i++) {
