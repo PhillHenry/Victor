@@ -49,7 +49,7 @@ public class GPUOpsTest {
     }
 
     @Test
-    public void testBrokenTornadoDotProductFloatArrayReduceOnGPU() {
+    public void testMultiplyReduceCPU() {
         FloatArray result = new FloatArray(size);
         toTest.multipleAndReduce(vecFloatArray, vecFloatArrayOther, result);
         float total = 0f;

@@ -52,6 +52,13 @@ public class GPUOps {
         return sum;
     }
 
+    public static void reduceByAdding(FloatArray A, @Reduce FloatArray result) {
+        int size = A.getSize();
+        for (@Parallel int i = 0; i < size; i++) {
+            result.set(0, result.get(0) + A.get(i));
+        }
+    }
+
     public float dotReduceOnGPU(final FloatArray A, final FloatArray B) {
         FloatArray result = new FloatArray(1);
         TaskGraph t = new TaskGraph("s0")
