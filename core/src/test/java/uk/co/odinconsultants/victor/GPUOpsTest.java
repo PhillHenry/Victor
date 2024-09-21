@@ -41,14 +41,21 @@ public class GPUOpsTest {
 
     @Test
     public void testTornadoDotProductFloatArray() {
-        System.out.println("This is the console");
         Assert.assertEquals(x * size, toTest.dot(vecFloatArray, vecFloatArrayOther, size), 0f);
     }
 
     @Test
     public void testTornadoDotProductFloatArrayReduceOnGPU() {
-        System.out.println("This is the console");
         Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther), 0f);
+    }
+
+    @Test
+    public void testBrokenTornadoDotProductFloatArrayReduceOnGPU() {
+        FloatArray result = new FloatArray(size);
+        toTest.dotFloatArrayBroken(vecFloatArray, vecFloatArrayOther, result);
+        for (int i = 0 ; i < vec.length ; i++) {
+            Assert.assertEquals(vec[i] * vec[i], result.get(i), 0f);
+        }
     }
 
     @Test
