@@ -52,11 +52,20 @@ public class GPUOpsTest {
     public void testMultiplyReduceCPU() {
         FloatArray result = new FloatArray(size);
         toTest.multipleAndReduce(vecFloatArray, vecFloatArrayOther, result);
+        Assert.assertEquals(squareAndReduceVec(), result.get(0), 0f);
+    }
+
+    private float squareAndReduceVec() {
         float total = 0f;
-        for (int i = 0 ; i < vec.length ; i++) {
+        for (int i = 0; i < vec.length; i++) {
             total += vec[i] * vec[i];
         }
-        Assert.assertEquals(total, result.get(0), 0f);
+        return total;
+    }
+
+    @Test
+    public void testReduceGPU() {
+        Assert.assertEquals(squareAndReduceVec(), toTest.reduceOnGPU(vecFloatArray), 0f);
     }
 
     @Test
