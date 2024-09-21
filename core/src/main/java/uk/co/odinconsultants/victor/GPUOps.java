@@ -24,10 +24,10 @@ public class GPUOps {
      * This is broken as it only computes the first value.
      * The reason seems to be that the @Parallel must work over the
      */
-    public static void dotFloatArrayBroken(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
+    public static void multipleAndReduce(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
         int size = A.getSize();
         for (@Parallel int i = 0; i < size; i++) {
-            result.set(i, A.get(i) * B.get(i));
+            result.set(0, result.get(0) + A.get(i) * B.get(i));
         }
     }
 
