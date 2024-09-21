@@ -28,15 +28,6 @@ public class GPUOps {
         }
     }
 
-    public static void dotFloatArrayReducing(FloatArray A, final FloatArray B,  FloatArray result) {
-        result.set(0, 0f);
-        int size = A.getSize();
-        for (int i = 0; i < size; i++) {
-            float value = A.get(i) * B.get(i);
-            result.set(0, result.get(0) + value);
-        }
-    }
-
     public static void dotFloatArrayReducingWithAnnotations(FloatArray A, final FloatArray B, @Reduce FloatArray result) {
         result.set(0, 0f);
         for (@Parallel int i = 0; i < A.getSize(); i++) {
@@ -66,7 +57,7 @@ public class GPUOps {
         FloatArray result = new FloatArray(1);
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
-                .task("t0", GPUOps::dotFloatArrayReducing, A, B, result)
+                .task("t0", GPUOps::dotFloatArrayReducingWithAnnotations, A, B, result)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
         execute(t);
         return result.get(0);
