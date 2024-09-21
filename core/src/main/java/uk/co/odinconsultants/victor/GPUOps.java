@@ -55,12 +55,17 @@ public class GPUOps {
 
     public float dotReduceOnGPU(final FloatArray A, final FloatArray B) {
         FloatArray result = new FloatArray(1);
+        TaskGraph t = dotReduceTaskGraph(A, B, result);
+        execute(t);
+        return result.get(0);
+    }
+
+    public TaskGraph dotReduceTaskGraph(final FloatArray A, final FloatArray B, FloatArray result) {
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, A, B, result)
                 .task("t0", GPUOps::dotFloatArrayReducingWithAnnotations, A, B, result)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
-        execute(t);
-        return result.get(0);
+        return t;
     }
 
     public static void reduceByAdding(FloatArray A, @Reduce FloatArray result) {
@@ -86,7 +91,7 @@ public class GPUOps {
     private static void execute(TaskGraph t) {
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
         TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
-        executionPlan.withProfiler(ProfilerMode.CONSOLE);
+//        executionPlan.withProfiler(ProfilerMode.CONSOLE);
         executionPlan.execute();
     }
 

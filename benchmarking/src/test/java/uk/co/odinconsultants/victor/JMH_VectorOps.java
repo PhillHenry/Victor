@@ -5,9 +5,15 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
+import uk.ac.manchester.tornado.api.ImmutableTaskGraph;
+import uk.ac.manchester.tornado.api.TaskGraph;
+import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
+import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
+
+import static uk.ac.manchester.tornado.api.types.arrays.FloatArray.fromArray;
 
 /**
  * See https://medium.com/@Styp/java-18-vector-api-do-we-get-free-speed-up-c4510eda50d2
@@ -20,7 +26,7 @@ public class JMH_VectorOps {
     private final AdvancedVectorExtensionsOps aveOps = new AdvancedVectorExtensionsOps();
     private final GPUOps gpuOps = new GPUOps();
 
-    private final int n = 8388608;
+    private final int n = 8192;
 
     public static float[] createRandomVector(int n) {
         var random = new Random();
@@ -33,10 +39,16 @@ public class JMH_VectorOps {
 
     float[] x = createRandomVector(n);
     float[] y = createRandomVector(n);
+    final FloatArray result = new FloatArray(1);
+    final TaskGraph t = gpuOps.dotReduceTaskGraph(fromArray(x), fromArray(y), result);
+    ImmutableTaskGraph immutableTaskGraph = t.snapshot();
+    TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
+
 
     @Benchmark
-    public void usingGPU() {
-        gpuOps.dotReduceOnCPU(x, y);
+    public float usingGPU() {
+        executionPlan.execute();
+        return result.get(0);
     }
     @Benchmark
     public float usingJEP426() {
