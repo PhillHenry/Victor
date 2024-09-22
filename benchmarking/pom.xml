@@ -100,6 +100,7 @@
                                 <argument>--classpath</argument>
                                 <classpath />
                                 <argument>org.openjdk.jmh.Main</argument>
+                                <argument>uk.co.odinconsultants.victor.JMH_VectorOps</argument>
                             </arguments>
                         </configuration>
                     </execution>

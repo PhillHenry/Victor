@@ -37,17 +37,15 @@ public class JMH_VectorOps {
         return vec;
     }
 
-    float[] x = createRandomVector(n);
-    float[] y = createRandomVector(n);
-    final FloatArray result = new FloatArray(1);
-    final TaskGraph t = gpuOps.dotReduceTaskGraph(fromArray(x), fromArray(y), result);
-    ImmutableTaskGraph immutableTaskGraph = t.snapshot();
-    TornadoExecutionPlan executionPlan = new TornadoExecutionPlan(immutableTaskGraph);
-
+    private final float[] x = createRandomVector(n);
+    private final float[] y = createRandomVector(n);
+    private final FloatArray X = fromArray(x);
+    private final FloatArray Y = fromArray(y);
+    private final FloatArray result = new FloatArray(1);
 
     @Benchmark
     public float usingGPU() {
-        executionPlan.execute();
+        gpuOps.dotFloatArrayReducingWithAnnotations(X, Y, result);
         return result.get(0);
     }
     @Benchmark
