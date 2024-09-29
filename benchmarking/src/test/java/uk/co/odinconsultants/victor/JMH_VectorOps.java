@@ -8,6 +8,7 @@ import org.openjdk.jmh.runner.options.OptionsBuilder;
 import uk.ac.manchester.tornado.api.ImmutableTaskGraph;
 import uk.ac.manchester.tornado.api.TaskGraph;
 import uk.ac.manchester.tornado.api.TornadoExecutionPlan;
+import uk.ac.manchester.tornado.api.enums.DataTransferMode;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 
 import java.util.Random;
@@ -24,9 +25,8 @@ import static uk.ac.manchester.tornado.api.types.arrays.FloatArray.fromArray;
 public class JMH_VectorOps {
 
     private final AdvancedVectorExtensionsOps aveOps = new AdvancedVectorExtensionsOps();
-    private final GPUOps gpuOps = new GPUOps();
 
-    private final int n = 8192;
+    private final int n = (int)Math.pow(2, 13);
 
     public static float[] createRandomVector(int n) {
         var random = new Random();
@@ -42,10 +42,18 @@ public class JMH_VectorOps {
     private final FloatArray X = fromArray(x);
     private final FloatArray Y = fromArray(y);
     private final FloatArray result = new FloatArray(1);
+    TaskGraph t = new TaskGraph("s0")
+            .transferToDevice(DataTransferMode.EVERY_EXECUTION, X, Y, result)
+            .task("t0", GPUOps::dotFloatArrayReducingWithAnnotations, X, Y, result)
+            .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
+
+    ImmutableTaskGraph immutableTaskGraph = t.snapshot();
+    private final TornadoExecutionPlan executor = new TornadoExecutionPlan(immutableTaskGraph);
+//    executor.withWarmUp();
 
     @Benchmark
     public float usingGPU() {
-        gpuOps.dotFloatArrayReducingWithAnnotations(X, Y, result);
+        executor.execute();
         return result.get(0);
     }
     @Benchmark
