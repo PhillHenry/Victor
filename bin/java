@@ -2,4 +2,5 @@ export JAVA_HOME=/usr/local/bin/Java/graalvm-jdk-21.0.1+12.1
 export PATH=$JAVA_HOME/bin:$PATH
 
 export PATH=$TORNADO_SDK/bin:$PATH
+#$TORNADO_SDK/bin/tornado --jvm "\-\-add-modules=jdk.incubator.vector" --jvm "\-Dtornado.logger.codegen=True"  --enableProfiler console  --printKernel --printBytecodes --fullDebug  $@
 $TORNADO_SDK/bin/tornado --jvm "\-\-add-modules=jdk.incubator.vector" --jvm "\-Dtornado.logger.codegen=True" $@

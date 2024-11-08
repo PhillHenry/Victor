@@ -25,8 +25,9 @@ import static uk.ac.manchester.tornado.api.types.arrays.FloatArray.fromArray;
 public class JMH_VectorOps {
 
     private final AdvancedVectorExtensionsOps aveOps = new AdvancedVectorExtensionsOps();
-
-    private final int n = (int)Math.pow(2, 13);
+    @Param({"10", "11", "12"})
+    public int arg;
+    private final int n = (int)Math.pow(2, arg);
 
     public static float[] createRandomVector(int n) {
         var random = new Random();
