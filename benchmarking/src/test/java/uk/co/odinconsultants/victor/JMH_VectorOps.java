@@ -43,11 +43,9 @@ public class JMH_VectorOps {
     private final FloatArray X = fromArray(x);
     private final FloatArray Y = fromArray(y);
     private final FloatArray result = new FloatArray(1);
-    TaskGraph t = new TaskGraph("s0")
-            .transferToDevice(DataTransferMode.EVERY_EXECUTION, X, Y, result)
-            .task("t0", GPUOps::dotFloatArrayReducingWithAnnotations, X, Y, result)
-            .transferToHost(DataTransferMode.EVERY_EXECUTION, result);
 
+    GPUOps gpuOps = new GPUOps();
+    TaskGraph t = gpuOps.dotReduceTaskGraph(X, Y, result);
     ImmutableTaskGraph immutableTaskGraph = t.snapshot();
     private final TornadoExecutionPlan executor = new TornadoExecutionPlan(immutableTaskGraph);
 //    executor.withWarmUp();
