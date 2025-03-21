@@ -8,6 +8,8 @@ import uk.ac.manchester.tornado.api.enums.DataTransferMode;
 import uk.ac.manchester.tornado.api.enums.ProfilerMode;
 import uk.ac.manchester.tornado.api.types.matrix.Matrix2DFloat;
 
+import java.util.Random;
+
 public class MatrixExamples {
 
     private static final MatrixUtils matrixUtils = new MatrixUtils();
@@ -39,8 +41,9 @@ public class MatrixExamples {
     }
 
     private void matrixMultExample() {
-        int size = 512;
-        final Matrix2DFloat m = matrixUtils.createAndInitializeMatrix(size, size, () -> 1.1f);
+        var rand = new Random();
+        int size = 8000; // since this is not a multiple of 32, ncu-ui will warn
+        final Matrix2DFloat m = matrixUtils.createAndInitializeMatrix(size, size, rand::nextFloat);
         Matrix2DFloat output = new Matrix2DFloat(size, size);
         TaskGraph t = dotReduceTaskGraph(m,m, output);
         execute(t);
