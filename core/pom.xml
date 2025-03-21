@@ -58,7 +58,27 @@
 <!--                    <argLine>&#45;&#45;add-opens=java.base/java.nio=ALL-UNNAMED</argLine>-->
                 </configuration>
             </plugin>
-
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <executable>${pom.parent.basedir}/bin/java</executable>
+                    <arguments>
+                        <argument>-cp</argument>
+                        <classpath/>
+                        <argument>uk.co.odinconsultants.victor.MatrixExamples</argument>
+                    </arguments>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

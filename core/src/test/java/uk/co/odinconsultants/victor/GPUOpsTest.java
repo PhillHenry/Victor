@@ -44,7 +44,7 @@ public class GPUOpsTest {
     }
 
     @Test
-    public void testTornadoDotProductFloatArrayReduceOnGPU() {
+    public void testTornadoDotProductFloatArrayReduceOnGPU() throws InterruptedException {
         Assert.assertEquals(x * size, toTest.dotReduceOnGPU(vecFloatArray, vecFloatArrayOther), 0f);
     }
 
