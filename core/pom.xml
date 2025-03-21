@@ -75,7 +75,7 @@
                     <arguments>
                         <argument>-cp</argument>
                         <classpath/>
-                        <argument>uk.co.odinconsultants.victor.MatrixExamples</argument>
+                        <argument>${exec.mainClass}</argument>
                     </arguments>
                 </configuration>
             </plugin>
