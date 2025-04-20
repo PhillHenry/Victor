@@ -17,9 +17,10 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Fork(3)
 public class JMH_SoftMax {
 
-    @Param({"10", "11", "12"})
+    @Param({"8"})
     public int arg;
     private final int n = (int)Math.pow(2, arg);
     private final Matrix2DFloat m = new Matrix2DFloat(n, n);
