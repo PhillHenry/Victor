@@ -100,7 +100,7 @@
                                 <argument>--classpath</argument>
                                 <classpath />
                                 <argument>org.openjdk.jmh.Main</argument>
-                                <argument>uk.co.odinconsultants.victor.JMH_VectorOps</argument>
+                                <argument>uk.co.odinconsultants.victor.JMH_SoftMax</argument>
                             </arguments>
                         </configuration>
                     </execution>

@@ -34,6 +34,10 @@ public class SoftMax {
 
     public static void softMaxInPlace(Matrix2DFloat m) {
         var sum = new FloatArray(m.getNumColumns());
+        softMaxInPlaceGPU(m, sum);
+    }
+
+    static void softMaxInPlaceGPU(Matrix2DFloat m, FloatArray sum) {
         expInPlace(m);
         sum(m, sum);
         divideInPlace(m, sum);
