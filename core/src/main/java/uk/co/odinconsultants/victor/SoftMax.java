@@ -1,14 +1,13 @@
 package uk.co.odinconsultants.victor;
 
 import uk.ac.manchester.tornado.api.annotations.Parallel;
-import uk.ac.manchester.tornado.api.annotations.Reduce;
 import uk.ac.manchester.tornado.api.math.TornadoMath;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 import uk.ac.manchester.tornado.api.types.matrix.Matrix2DFloat;
 
 public class SoftMax {
 
-    public static void sum(Matrix2DFloat m, @Reduce FloatArray result) {
+    public static void sum(Matrix2DFloat m, FloatArray result) {
         for (@Parallel int i = 0; i < m.getNumRows(); i++) {
             for (@Parallel int j = 0; j < m.getNumColumns(); j++) {
                 result.set(j, result.get(j) + m.get(i, j));
