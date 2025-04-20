@@ -34,8 +34,8 @@ public class SoftMax {
 
     public static void softMaxInPlace(Matrix2DFloat m) {
         var sum = new FloatArray(m.getNumColumns());
-        sum(m, sum);
         expInPlace(m);
+        sum(m, sum);
         divideInPlace(m, sum);
     }
 

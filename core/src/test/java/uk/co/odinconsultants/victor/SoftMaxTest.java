@@ -35,7 +35,7 @@ public class SoftMaxTest {
         var m = allOnes();
         SoftMax.softMaxInPlace(m);
         forEachCell(m, (i, j) ->
-            assertEquals(EXP1 / 2, m.get(i, j), TOLERANCE)
+            assertEquals(1f / 2, m.get(i, j), TOLERANCE)
         );
     }
 
