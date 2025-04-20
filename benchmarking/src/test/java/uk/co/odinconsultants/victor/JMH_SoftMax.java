@@ -36,8 +36,10 @@ public class JMH_SoftMax {
         }
         t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, m, sum)
-                .task("t0", SoftMax::softMaxInPlaceGPU, m, sum)
-                .transferToHost(DataTransferMode.EVERY_EXECUTION, sum);
+                .task("t0", SoftMax::expInPlace, m)
+                .task("t1", SoftMax::sum, m, sum)
+                .task("t2", SoftMax::divideInPlace, m, sum)
+                .transferToHost(DataTransferMode.EVERY_EXECUTION, m, sum);
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
         executor = new TornadoExecutionPlan(immutableTaskGraph);
     }
