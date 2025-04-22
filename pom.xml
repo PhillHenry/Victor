@@ -50,17 +50,35 @@
             <groupId>tornado</groupId>
             <artifactId>tornado-api</artifactId>
             <version>${tornado.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>tornado</groupId>
             <artifactId>tornado-matrices</artifactId>
             <version>${tornado.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>tornado</groupId>
             <artifactId>tornado-runtime</artifactId>
             <version>${tornado.version}</version>
             <scope>provided</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.openjdk.jmh</groupId>
+                    <artifactId>jmh-core</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.arrow</groupId>

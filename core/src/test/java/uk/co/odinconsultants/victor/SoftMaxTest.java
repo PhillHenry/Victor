@@ -33,7 +33,8 @@ public class SoftMaxTest {
     @Test
     public void testHappyPath() {
         var m = allOnes();
-        SoftMax.softMaxInPlace(m);
+        var sum = new FloatArray(m.getNumColumns());
+        SoftMax.softMaxInPlace(m, sum);
         forEachCell(m, (i, j) ->
             assertEquals(1f / 2, m.get(i, j), TOLERANCE)
         );

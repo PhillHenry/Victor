@@ -17,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
+@Threads(6)
 @Fork(3)
 public class JMH_SoftMax {
 
@@ -46,15 +47,15 @@ public class JMH_SoftMax {
     }
 
     @Benchmark
-    public Matrix2DFloat gpuSoftMax() {
+    public float softMaxGPU() {
         executor.execute();
-        return m;
+        return m.get(0, 0);
     }
 
     @Benchmark
-    public Matrix2DFloat softMaxCPU() {
-        SoftMax.softMaxInPlace(m);
-        return m;
+    public float softMaxCPU() {
+        SoftMax.softMaxInPlace(m, sum);
+        return m.get(0, 0);
     }
 
     public static void main(String[] args) throws RunnerException {
