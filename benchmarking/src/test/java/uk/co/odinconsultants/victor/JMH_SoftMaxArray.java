@@ -13,6 +13,7 @@ import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 
 import java.util.concurrent.TimeUnit;
 
+import static uk.co.odinconsultants.victor.SoftMax.softMaxInPlaceGPUArray;
 import static uk.co.odinconsultants.victor.SoftMax.taskGraph;
 
 @State(Scope.Thread)
@@ -40,8 +41,24 @@ public class JMH_SoftMaxArray {
     }
 
     @Benchmark
+    @BenchmarkMode(Mode.AverageTime)
+    @Warmup(iterations = 2, time = 30, timeUnit = TimeUnit.SECONDS)
+    @Measurement(iterations = 3, time = 30, timeUnit = TimeUnit.SECONDS)
+    @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    @Fork(1)
     public float softMaxGPU() {
         executor.execute();
+        return m.get(0);
+    }
+
+//    @Benchmark
+    @BenchmarkMode(Mode.AverageTime)
+    @Warmup(iterations = 2, time = 30, timeUnit = TimeUnit.SECONDS)
+    @Measurement(iterations = 3, time = 30, timeUnit = TimeUnit.SECONDS)
+    @OutputTimeUnit(TimeUnit.NANOSECONDS)
+    @Fork(1)
+    public float softMaxCPU() {
+        softMaxInPlaceGPUArray(m, sum, n, n);
         return m.get(0);
     }
 

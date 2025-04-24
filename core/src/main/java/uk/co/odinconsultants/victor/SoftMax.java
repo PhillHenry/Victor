@@ -13,12 +13,9 @@ import uk.ac.manchester.tornado.api.types.matrix.Matrix2DFloat;
 public class SoftMax {
 
     public static void sumArray(FloatArray m, FloatArray result, int nRows, int nCols) {
-        for (@Parallel int col = 0; col < nCols; col++) {
-            float sum = 0;
-            for (@Reduce int row = 0; row < nRows; row++) {
-                sum += m.get(row * nCols + col);
-            }
-            result.set(col, sum);
+        for (@Parallel int i = 0; i < nCols * nRows; i++) {
+            int col = i % nCols;
+            result.set(col, result.get(col) + m.get(i));
         }
     }
 
