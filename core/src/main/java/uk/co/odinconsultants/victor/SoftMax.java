@@ -1,13 +1,14 @@
 package uk.co.odinconsultants.victor;
 
 import uk.ac.manchester.tornado.api.annotations.Parallel;
+import uk.ac.manchester.tornado.api.annotations.Reduce;
 import uk.ac.manchester.tornado.api.math.TornadoMath;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 import uk.ac.manchester.tornado.api.types.matrix.Matrix2DFloat;
 
 public class SoftMax {
 
-    public static void sumArray(FloatArray m, FloatArray result) {
+    public static void sumArray(FloatArray m, @Reduce FloatArray result) {
         for (@Parallel int row = 0; row < m.getElementSize() / result.getSize(); row++) {
             for (int col = 0; col < result.getSize(); col++) {
                 result.set(col, result.get(col) + m.get(row * result.getSize() + col));
@@ -23,7 +24,7 @@ public class SoftMax {
         }
     }
 
-    public static void divideInPlaceArray(FloatArray m, FloatArray d) {
+    public static void divideInPlaceArray(FloatArray m, @Reduce FloatArray d) {
         for (@Parallel int row = 0; row < m.getElementSize() / d.getSize(); row++) {
             for (int col = 0; col < d.getSize(); col++) {
                 m.set(row * d.getSize() + col, m.get(row * d.getSize() + col) / d.get(col));
