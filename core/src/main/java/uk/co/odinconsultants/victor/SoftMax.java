@@ -1,33 +1,32 @@
 package uk.co.odinconsultants.victor;
 
 import uk.ac.manchester.tornado.api.annotations.Parallel;
-import uk.ac.manchester.tornado.api.annotations.Reduce;
 import uk.ac.manchester.tornado.api.math.TornadoMath;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 import uk.ac.manchester.tornado.api.types.matrix.Matrix2DFloat;
 
 public class SoftMax {
 
-    public static void sumArray(FloatArray m, @Reduce FloatArray result) {
-        for (@Parallel int row = 0; row < m.getElementSize() / result.getSize(); row++) {
-            for (@Parallel int col = 0; col < result.getSize(); col++) {
-                result.set(col, result.get(col) + m.get(row * result.getSize() + col));
+    public static void sumArray(FloatArray m, FloatArray result, int nRows, int nCols) {
+        for (@Parallel int row = 0; row < nRows; row++) {
+            for (@Parallel int col = 0; col < nCols; col++) {
+                result.set(col, result.get(col) + m.get(row * nCols + col));
             }
         }
     }
 
-    public static void expInPlaceArray(FloatArray m, int nColumns) {
-        for (@Parallel int row = 0; row < m.getElementSize() / nColumns; row++) {
-            for (@Parallel int col = 0; col < nColumns; col++) {
-                m.set(row * nColumns + col, TornadoMath.exp(m.get(row * nColumns + col)));
+    public static void expInPlaceArray(FloatArray m, int nRows, int nCols) {
+        for (@Parallel int row = 0; row < nRows; row++) {
+            for (@Parallel int col = 0; col < nCols; col++) {
+                m.set(row * nCols + col, TornadoMath.exp(m.get(row * nCols + col)));
             }
         }
     }
 
-    public static void divideInPlaceArray(FloatArray m, @Reduce FloatArray d) {
-        for (@Parallel int row = 0; row < m.getElementSize() / d.getSize(); row++) {
-            for (@Parallel int col = 0; col < d.getSize(); col++) {
-                m.set(row * d.getSize() + col, m.get(row * d.getSize() + col) / d.get(col));
+    public static void divideInPlaceArray(FloatArray m, FloatArray d, int nRows, int nCols) {
+        for (@Parallel int row = 0; row < nRows; row++) {
+            for (@Parallel int col = 0; col < nCols; col++) {
+                m.set(row * nCols + col, m.get(row * nCols + col) / d.get(col));
             }
         }
     }
@@ -61,10 +60,10 @@ public class SoftMax {
         softMaxInPlaceGPU(m, sum);
     }
 
-    static void softMaxInPlaceGPUArray(FloatArray m, FloatArray sum) {
-        expInPlaceArray(m, sum.getSize());
-        sumArray(m, sum);
-        divideInPlaceArray(m, sum);
+    static void softMaxInPlaceGPUArray(FloatArray m, FloatArray sum, int nRows, int nCols) {
+        expInPlaceArray(m, nRows, nCols);
+        sumArray(m, sum, nRows, nCols);
+        divideInPlaceArray(m, sum, nRows, nCols);
     }
 
     static void softMaxInPlaceGPU(Matrix2DFloat m, FloatArray sum) {

@@ -19,7 +19,7 @@ public class SoftMaxTest {
     @Test
     public void testExpInPlaceArray() {
         var m = allOnesArray();
-        SoftMax.expInPlaceArray(m, 2);
+        SoftMax.expInPlaceArray(m, MATRIX_SIDE, MATRIX_SIDE);
         forEachCellArray(m, (x) -> assertEquals(EXP1, m.get(x), TOLERANCE));
     }
 
@@ -27,7 +27,7 @@ public class SoftMaxTest {
     public void testSumArray() {
         var m = allOnesArray();
         var sum = new FloatArray(2);
-        SoftMax.sumArray(m, sum);
+        SoftMax.sumArray(m, sum, MATRIX_SIDE, MATRIX_SIDE);
         for (int i = 0; i < MATRIX_SIDE; i++) {
             assertEquals(2f, sum.get(i), TOLERANCE);
         }
@@ -36,7 +36,7 @@ public class SoftMaxTest {
     public void testHappyPathArray() {
         var m = allOnesArray();
         var sum = new FloatArray(MATRIX_SIDE);
-        SoftMax.softMaxInPlaceGPUArray(m, sum);
+        SoftMax.softMaxInPlaceGPUArray(m, sum, MATRIX_SIDE, MATRIX_SIDE);
         forEachCellArray(m, (i) ->
             assertEquals(1f / 2, m.get(i), TOLERANCE)
         );

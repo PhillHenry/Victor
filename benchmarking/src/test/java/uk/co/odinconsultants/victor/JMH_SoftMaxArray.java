@@ -35,9 +35,9 @@ public class JMH_SoftMaxArray {
         }
         t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, m, sum)
-                .task("t0", SoftMax::expInPlaceArray, m, n)
-                .task("t1", SoftMax::sumArray, m, sum)
-                .task("t2", SoftMax::divideInPlaceArray, m, sum)
+                .task("t0", (m1, nColumns, nRows) -> SoftMax.expInPlaceArray(m1, nRows, nColumns), m, n, n)
+                .task("t1", SoftMax::sumArray, m, sum, n, n)
+                .task("t2", SoftMax::divideInPlaceArray, m, sum, n, n)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, m, sum);
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
         executor = new TornadoExecutionPlan(immutableTaskGraph);
