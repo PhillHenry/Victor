@@ -22,6 +22,7 @@ public class JMH_SoftMaxArray {
 
     @Param({"8"})
     public int arg;
+
     private final int n = (int)Math.pow(2, arg);
     private final FloatArray m = new FloatArray(n * n);
     private TaskGraph t;
@@ -35,12 +36,13 @@ public class JMH_SoftMaxArray {
         }
         t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, m, sum)
-                .task("t0", (m1, nColumns, nRows) -> SoftMax.expInPlaceArray(m1, nRows, nColumns), m, n, n)
+                .task("t0", SoftMax::expInPlaceArray, m, n, n)
                 .task("t1", SoftMax::sumArray, m, sum, n, n)
                 .task("t2", SoftMax::divideInPlaceArray, m, sum, n, n)
-                .transferToHost(DataTransferMode.EVERY_EXECUTION, m, sum);
+                .transferToHost(DataTransferMode.EVERY_EXECUTION, m);
         ImmutableTaskGraph immutableTaskGraph = t.snapshot();
         executor = new TornadoExecutionPlan(immutableTaskGraph);
+        executor.withWarmUp();
     }
 
     @Benchmark
@@ -48,12 +50,6 @@ public class JMH_SoftMaxArray {
         executor.execute();
         return m.get(0);
     }
-
-//    @Benchmark
-//    public float softMaxCPU() {
-//        SoftMax.softMaxInPlace(m, sum);
-//        return m.get(0, 0);
-//    }
 
     public static void main(String[] args) throws RunnerException {
         Options opt = new OptionsBuilder()
