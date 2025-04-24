@@ -19,25 +19,28 @@ import static uk.co.odinconsultants.victor.SoftMax.taskGraph;
 @State(Scope.Thread)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-@Threads(6)
+@Threads(1)
 @Fork(3)
 public class JMH_SoftMaxArray {
 
-    @Param({"8"})
-    public int arg;
+    @Param({"12"})
+    static public int arg;
+    static private final int n = (int) Math.pow(2, arg);
 
-    private final int n = (int)Math.pow(2, arg);
-    private final FloatArray m = new FloatArray(n * n);
-    TornadoExecutionPlan executor;
-    FloatArray sum = new FloatArray(n);
+    @State(Scope.Thread)
+    public static class BenchmarkSetup {
+        private final FloatArray m = new FloatArray(n * n);
+        private final FloatArray sum = new FloatArray(n);
+        TornadoExecutionPlan executor;
 
-    @Setup
-    public void setup() {
-        for (int i = 0; i < n * n; i++) {
-            m.set(i, (float)Math.random());
+        @Setup(Level.Trial)
+        public void setup() {
+            for (int i = 0; i < n * n; i++) {
+                m.set(i, (float) Math.random());
+            }
+            executor = taskGraph(m, sum, n, n);
+            executor.withWarmUp();
         }
-        executor = taskGraph(m, sum, n, n);
-        executor.withWarmUp();
     }
 
     @Benchmark
@@ -46,20 +49,20 @@ public class JMH_SoftMaxArray {
     @Measurement(iterations = 3, time = 30, timeUnit = TimeUnit.SECONDS)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
     @Fork(1)
-    public float softMaxGPU() {
-        executor.execute();
-        return m.get(0);
+    public float softMaxGPU(BenchmarkSetup state) {
+        state.executor.execute();
+        return state.m.get(0);
     }
 
-//    @Benchmark
+    @Benchmark
     @BenchmarkMode(Mode.AverageTime)
     @Warmup(iterations = 2, time = 30, timeUnit = TimeUnit.SECONDS)
     @Measurement(iterations = 3, time = 30, timeUnit = TimeUnit.SECONDS)
     @OutputTimeUnit(TimeUnit.NANOSECONDS)
     @Fork(1)
-    public float softMaxCPU() {
-        softMaxInPlaceGPUArray(m, sum, n, n);
-        return m.get(0);
+    public float softMaxCPU(BenchmarkSetup state) {
+        softMaxInPlaceGPUArray(state.m, state.sum, n, n);
+        return state.m.get(0);
     }
 
     public static void main(String[] args) throws RunnerException {
