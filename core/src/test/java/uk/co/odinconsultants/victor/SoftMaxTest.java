@@ -19,7 +19,7 @@ public class SoftMaxTest {
     @Test
     public void testExpInPlaceArray() {
         var m = allOnesArray();
-        SoftMax.expInPlaceArray(m, MATRIX_SIDE, MATRIX_SIDE);
+        SoftMax.expInPlaceArray(m, MATRIX_SIDE * MATRIX_SIDE);
         forEachCellArray(m, (x) -> assertEquals(EXP1, m.get(x), TOLERANCE));
     }
 

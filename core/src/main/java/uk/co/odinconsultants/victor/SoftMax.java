@@ -12,18 +12,18 @@ import uk.ac.manchester.tornado.api.types.matrix.Matrix2DFloat;
 public class SoftMax {
 
     public static void sumArray(FloatArray m, FloatArray result, int nRows, int nCols) {
-        for (@Parallel int row = 0; row < nRows; row++) {
-            for (@Parallel int col = 0; col < nCols; col++) {
-                result.set(col, result.get(col) + m.get(row * nCols + col));
+        for (@Parallel int col = 0; col < nCols; col++) {
+            float sum = 0;
+            for (@Parallel int row = 0; row < nRows; row++) {
+                sum += m.get(row * nCols + col);
             }
+            result.set(col, sum);
         }
     }
 
-    public static void expInPlaceArray(FloatArray m, int nRows, int nCols) {
-        for (@Parallel int row = 0; row < nRows; row++) {
-            for (@Parallel int col = 0; col < nCols; col++) {
-                m.set(row * nCols + col, TornadoMath.exp(m.get(row * nCols + col)));
-            }
+    public static void expInPlaceArray(FloatArray m, int n) {
+        for (@Parallel int i = 0; i < n; i++) {
+            m.set(i, TornadoMath.exp(m.get(i)));
         }
     }
 
@@ -65,7 +65,7 @@ public class SoftMax {
     }
 
     static void softMaxInPlaceGPUArray(FloatArray m, FloatArray sum, int nRows, int nCols) {
-        expInPlaceArray(m, nRows, nCols);
+        expInPlaceArray(m, nRows * nCols);
         sumArray(m, sum, nRows, nCols);
         divideInPlaceArray(m, sum, nRows, nCols);
     }
@@ -79,7 +79,7 @@ public class SoftMax {
     public static TornadoExecutionPlan taskGraph(FloatArray m, FloatArray sum, int nRows, int nCols) {
         TaskGraph t = new TaskGraph("s0")
                 .transferToDevice(DataTransferMode.EVERY_EXECUTION, m, sum)
-                .task("t0", SoftMax::expInPlaceArray, m, nRows, nCols)
+                .task("t0", SoftMax::expInPlaceArray, m, nRows * nCols)
                 .task("t1", SoftMax::sumArray, m, sum, nRows, nCols)
                 .task("t2", SoftMax::divideInPlaceArray, m, sum, nRows, nCols)
                 .transferToHost(DataTransferMode.EVERY_EXECUTION, m);
@@ -97,10 +97,10 @@ public class SoftMax {
         }
         TornadoExecutionPlan executor = taskGraph(m, sum, n, n);
         executor.execute();
-        for (int i = 0; i < n; i++) {
-            System.out.print(m.get(i) + ", ");
-        }
-        System.out.println("Finished");
+//        for (int i = 0; i < n; i++) {
+//            System.out.print(m.get(i) + ", ");
+//        }
+//        System.out.println("Finished");
     }
 
 }
