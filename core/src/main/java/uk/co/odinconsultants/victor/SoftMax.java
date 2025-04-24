@@ -28,10 +28,9 @@ public class SoftMax {
     }
 
     public static void divideInPlaceArray(FloatArray m, FloatArray d, int nRows, int nCols) {
-        for (@Parallel int row = 0; row < nRows; row++) {
-            for (@Parallel int col = 0; col < nCols; col++) {
-                m.set(row * nCols + col, m.get(row * nCols + col) / d.get(col));
-            }
+        for (@Parallel int i = 0; i < nRows * nCols; i++) {
+            int col = i % nCols;
+            m.set(i, m.get(i) / d.get(col));
         }
     }
 
