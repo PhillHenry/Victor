@@ -95,11 +95,10 @@ public class SoftMax {
             }
             TornadoExecutionPlan executor = taskGraph(m, sum, n, n);
             executor.execute();
+            for (int i = 0; i < n * n; i++) {
+                assert(Math.abs(m.get(i) - TornadoMath.exp(1) / n) < 1e-5);
+            }
         }
-//        for (int i = 0; i < n; i++) {
-//            System.out.print(m.get(i) + ", ");
-//        }
-//        System.out.println("Finished");
     }
 
 }
